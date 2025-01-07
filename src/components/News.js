@@ -14,11 +14,8 @@ const News=(props)=> {
   const capitalizeFirstLetter = (val) => {
     return String(val).charAt(0).toUpperCase() + String(val).slice(1);
   };
-  document.title = `${capitalizeFirstLetter(
-    props.category
-  )}- News`;
+ 
   const updateNews=async()=> {
-    console.log("cdm");
     props.setProgress(20);
     let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=a87748420d2d42f2b2c4cdad8c248b8f&page=${page}&pageSize=${props.pageSize}`;
     setLoading(true);
@@ -32,13 +29,16 @@ const News=(props)=> {
     props.setProgress(100);
   }
 useEffect(()=>{
-  updateNews();  
+  document.title = `${capitalizeFirstLetter(
+    props.category
+  )}- News`;
+  updateNews();
+  // eslint-disable-next-line   
 },[]);
 
   const fetchMoreData = async () => {
+    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=a87748420d2d42f2b2c4cdad8c248b8f&page=${page+1}&pageSize=${props.pageSize}`;
     setPage(page+1)
-   
-    let url = `https://newsapi.org/v2/top-headlines?country=${props.country}&category=${props.category}&apiKey=a87748420d2d42f2b2c4cdad8c248b8f&page=${page}&pageSize=${props.pageSize}`;
     let data = await fetch(url);
     let parseData = await data.json();
     setArticles(articles.concat(parseData.articles))
@@ -47,7 +47,7 @@ useEffect(()=>{
    
     return (
       <>
-        <h2 className="text-center" style={{ margin: "35px 0px" }}>
+        <h2 className="text-center" style={{ margin: "35px 0px",marginTop:"90px" }}>
            News - Top {capitalizeFirstLetter(props.category)}{" "}
           Headlines{" "}
         </h2>
@@ -84,23 +84,6 @@ useEffect(()=>{
             </div>
           </div>
         </InfiniteScroll>
-        {/* <div className="container d-flex justify-content-between">
-          <button
-            disabled={this.state.page <= 1}
-            type="button"
-            className="btn btn-danger"
-            onClick={this.handlePrevClick}
-          >
-            &larr;Previous
-          </button>
-          <button
-            type="button" disabled={this.state.page + 1 > Math.ceil(this.state.totalResults / props.pageSize)}
-            className="btn btn-danger"
-            onClick={this.handleNextClick}
-          >
-            Next&rarr;
-          </button>
-        </div> */}
       </>
     );
 }
